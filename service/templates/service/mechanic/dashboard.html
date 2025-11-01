@@ -1,0 +1,166 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Панель механіка - Автосервіс{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-tools"></i> Панель механіка</h1>
+
+<!-- Статистика -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Всього замовлень</h6>
+                        <h3 class="mb-0 mt-2">{{ stats.total_orders }}</h3>
+                    </div>
+                    <i class="bi bi-clipboard-data fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">В роботі</h6>
+                        <h3 class="mb-0 mt-2">{{ stats.in_progress_orders }}</h3>
+                    </div>
+                    <i class="bi bi-tools fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Виконано</h6>
+                        <h3 class="mb-0 mt-2">{{ stats.completed_orders }}</h3>
+                    </div>
+                    <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <h6 class="text-muted mb-0">Заробіток</h6>
+                <h4 class="text-success mb-0 mt-2">{{ stats.total_earned|floatformat:2 }} грн</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> <strong>Доступно {{ stats.pending_available }}</strong> нових замовлень для прийняття
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-list-task"></i> Мої замовлення</h5>
+            </div>
+            <div class="card-body">
+        {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Клієнт</th>
+                            <th>Автомобіль</th>
+                            <th>Статус</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.client.get_full_name|default:order.client.username }}</td>
+                            <td>{{ order.car }}</td>
+                            <td>
+                                <span class="status-badge status-{{ order.status }}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'order_detail' order.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'mechanic_order_update' order.pk %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info mb-0">
+                <i class="bi bi-info-circle"></i> У вас поки немає призначених замовлень
+            </div>
+        {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-clipboard-plus"></i> Доступні замовлення</h5>
+            </div>
+            <div class="card-body">
+        {% if pending_orders %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Клієнт</th>
+                            <th>Автомобіль</th>
+                            <th>Послуга</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in pending_orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.client.get_full_name|default:order.client.username }}</td>
+                            <td>{{ order.car }}</td>
+                            <td>{{ order.service_type }}</td>
+                            <td>
+                                <a href="{% url 'order_detail' order.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'mechanic_take_order' order.pk %}" class="btn btn-sm btn-success">
+                                    <i class="bi bi-check-circle"></i> Прийняти
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info mb-0">
+                <i class="bi bi-info-circle"></i> Немає нових замовлень
+            </div>
+        {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

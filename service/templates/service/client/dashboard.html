@@ -1,0 +1,196 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Панель клієнта - Автосервіс{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-speedometer2"></i> Панель клієнта</h1>
+
+<!-- Статистика -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Замовлень</h6>
+                        <h3 class="mb-0 mt-2">{{ stats.total_orders }}</h3>
+                    </div>
+                    <i class="bi bi-clipboard-check fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Виконано</h6>
+                        <h3 class="mb-0 mt-2">{{ stats.completed_orders }}</h3>
+                    </div>
+                    <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Автомобілів</h6>
+                        <h3 class="mb-0 mt-2">{{ stats.total_cars }}</h3>
+                    </div>
+                    <i class="bi bi-car-front fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <h6 class="text-muted mb-0">Всього витрачено</h6>
+                <h4 class="text-success mb-0 mt-2">{{ stats.total_spent|floatformat:2 }} грн</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Швидкі дії -->
+<div class="row mb-4">
+    <div class="col-12">
+        <a href="{% url 'add_car' %}" class="btn btn-primary btn-lg me-2">
+            <i class="bi bi-plus-circle"></i> Додати автомобіль
+        </a>
+        <a href="{% url 'create_order' %}" class="btn btn-success btn-lg">
+            <i class="bi bi-clipboard-plus"></i> Створити замовлення
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Замовлення -->
+    <div class="col-lg-8 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Останні замовлення</h5>
+            </div>
+            <div class="card-body">
+                {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>№</th>
+                                    <th>Автомобіль</th>
+                                    <th>Послуга</th>
+                                    <th>Статус</th>
+                                    <th>Вартість</th>
+                                    <th>Дата</th>
+                                    <th>Дії</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    <td>{{ order.car.license_plate }}</td>
+                                    <td>{{ order.service_type }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ order.status }}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td><strong>{{ order.price }} грн</strong></td>
+                                    <td>{{ order.created_at|date:"d.m.Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'order_detail' order.pk %}" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> Деталі
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if all_orders.count > 5 %}
+                        <div class="text-center mt-3">
+                            <p class="text-muted">Показано {{ orders|length }} з {{ all_orders.count }} замовлень</p>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle"></i> У вас ще немає замовлень. Створіть перше замовлення!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Автомобілі -->
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-car-front-fill"></i> Мої автомобілі</h5>
+            </div>
+            <div class="card-body">
+                {% if cars %}
+                    {% for car in cars %}
+                    <div class="card mb-3 border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                <i class="bi bi-car-front"></i> {{ car.brand }} {{ car.model }}
+                            </h5>
+                            <hr>
+                            <p class="card-text mb-1">
+                                <i class="bi bi-hash"></i> <strong>Номер:</strong> {{ car.license_plate }}<br>
+                                <i class="bi bi-calendar"></i> <strong>Рік:</strong> {{ car.year }}<br>
+                                <i class="bi bi-speedometer"></i> <strong>Пробіг:</strong> {{ car.mileage }} км<br>
+                                {% if car.color %}
+                                <i class="bi bi-palette"></i> <strong>Колір:</strong> {{ car.color }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle"></i> Додайте ваш автомобіль, щоб створити замовлення
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Швидкий доступ до статусів -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card border-warning">
+            <div class="card-body">
+                <h6 class="text-warning"><i class="bi bi-hourglass-split"></i> Очікують</h6>
+                <h4>{{ stats.pending_orders }}</h4>
+                <small class="text-muted">замовлень в черзі</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card border-info">
+            <div class="card-body">
+                <h6 class="text-info"><i class="bi bi-tools"></i> В роботі</h6>
+                <h4>{{ stats.in_progress_orders }}</h4>
+                <small class="text-muted">активних замовлень</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card border-success">
+            <div class="card-body">
+                <h6 class="text-success"><i class="bi bi-check-circle"></i> Виконано</h6>
+                <h4>{{ stats.completed_orders }}</h4>
+                <small class="text-muted">успішно завершених</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

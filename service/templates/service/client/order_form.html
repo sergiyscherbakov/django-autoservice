@@ -1,0 +1,56 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Створити замовлення - Автосервіс{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-clipboard-plus"></i> Створити замовлення</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.car.id_for_label }}" class="form-label">Автомобіль</label>
+                        {{ form.car }}
+                        {% if form.car.errors %}
+                            <div class="text-danger">{{ form.car.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.service_type.id_for_label }}" class="form-label">Тип послуги</label>
+                        {{ form.service_type }}
+                        {% if form.service_type.errors %}
+                            <div class="text-danger">{{ form.service_type.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Опис проблеми</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.price.id_for_label }}" class="form-label">Орієнтовна вартість (грн)</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <div class="text-danger">{{ form.price.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i> Створити замовлення
+                        </button>
+                        <a href="{% url 'client_dashboard' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Скасувати
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

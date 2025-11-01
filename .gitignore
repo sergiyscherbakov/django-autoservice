@@ -1,0 +1,52 @@
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Claude Code
+.claude/
+
+# Temporary files
+*.txt.bak
+*_old.py
+*_backup.py
+
+# Test outputs
+encoding_check.txt
+login_speed_test.txt
+users_list.txt
+verification_result.txt
+adminka.txt

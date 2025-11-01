@@ -1,0 +1,262 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Панель адміністратора - Автосервіс{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-shield-check"></i> Панель адміністратора</h1>
+
+<!-- Основна статистика -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Всього замовлень</h6>
+                        <h2 class="mb-0 mt-2">{{ stats.total_orders }}</h2>
+                    </div>
+                    <i class="bi bi-clipboard-data fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Очікує</h6>
+                        <h2 class="mb-0 mt-2">{{ stats.pending_orders }}</h2>
+                    </div>
+                    <i class="bi bi-hourglass-split fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">В роботі</h6>
+                        <h2 class="mb-0 mt-2">{{ stats.in_progress_orders }}</h2>
+                    </div>
+                    <i class="bi bi-tools fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title mb-0">Виконано</h6>
+                        <h2 class="mb-0 mt-2">{{ stats.completed_orders }}</h2>
+                    </div>
+                    <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Фінансова статистика -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card border-success">
+            <div class="card-body">
+                <h6 class="text-muted"><i class="bi bi-cash-stack"></i> Загальний дохід</h6>
+                <h3 class="text-success mb-0">{{ stats.total_revenue|floatformat:2 }} грн</h3>
+                <small class="text-muted">Всі виконані замовлення</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-info">
+            <div class="card-body">
+                <h6 class="text-muted"><i class="bi bi-calendar-range"></i> Дохід за 30 днів</h6>
+                <h3 class="text-info mb-0">{{ stats.recent_revenue|floatformat:2 }} грн</h3>
+                <small class="text-muted">{{ stats.recent_orders }} замовлень</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-primary">
+            <div class="card-body">
+                <h6 class="text-muted"><i class="bi bi-calculator"></i> Середня вартість</h6>
+                <h3 class="text-primary mb-0">{{ stats.avg_order_price|floatformat:2 }} грн</h3>
+                <small class="text-muted">На одне замовлення</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Топ послуги та активність механіків -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-star-fill"></i> Топ-5 Послуг</h5>
+            </div>
+            <div class="card-body">
+                {% if stats.top_services %}
+                    <div class="list-group list-group-flush">
+                        {% for service in stats.top_services %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ service.name }}</strong><br>
+                                <small class="text-muted">{{ service.default_price }} грн</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ service.order_count }} замовлень</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Немає даних</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-people-fill"></i> Активність механіків</h5>
+            </div>
+            <div class="card-body">
+                {% if stats.mechanics_stats %}
+                    <div class="list-group list-group-flush">
+                        {% for mechanic in stats.mechanics_stats %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>{{ mechanic.user.get_full_name|default:mechanic.user.username }}</strong>
+                                <div>
+                                    <span class="badge bg-info">{{ mechanic.total_orders }} всього</span>
+                                    <span class="badge bg-success">{{ mechanic.completed_orders }} виконано</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Немає механіків</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0"><i class="bi bi-funnel"></i> Фільтри та пошук</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <label for="{{ filter_form.status.id_for_label }}" class="form-label">{{ filter_form.status.label }}</label>
+                {{ filter_form.status }}
+            </div>
+            <div class="col-md-2">
+                <label for="{{ filter_form.date_from.id_for_label }}" class="form-label">{{ filter_form.date_from.label }}</label>
+                {{ filter_form.date_from }}
+            </div>
+            <div class="col-md-2">
+                <label for="{{ filter_form.date_to.id_for_label }}" class="form-label">{{ filter_form.date_to.label }}</label>
+                {{ filter_form.date_to }}
+            </div>
+            <div class="col-md-2">
+                <label for="{{ filter_form.car_search.id_for_label }}" class="form-label">{{ filter_form.car_search.label }}</label>
+                {{ filter_form.car_search }}
+            </div>
+            <div class="col-md-2">
+                <label for="{{ filter_form.price_min.id_for_label }}" class="form-label">{{ filter_form.price_min.label }}</label>
+                {{ filter_form.price_min }}
+            </div>
+            <div class="col-md-2">
+                <label for="{{ filter_form.price_max.id_for_label }}" class="form-label">{{ filter_form.price_max.label }}</label>
+                {{ filter_form.price_max }}
+            </div>
+            <div class="col-md-12">
+                <label for="{{ filter_form.search.id_for_label }}" class="form-label">{{ filter_form.search.label }}</label>
+                {{ filter_form.search }}
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Застосувати фільтри
+                </button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Скинути всі
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Всі замовлення</h5>
+    </div>
+    <div class="card-body">
+        {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Клієнт</th>
+                            <th>Автомобіль</th>
+                            <th>Послуга</th>
+                            <th>Механік</th>
+                            <th>Статус</th>
+                            <th>Вартість</th>
+                            <th>Дата</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.client.get_full_name|default:order.client.username }}</td>
+                            <td>{{ order.car.license_plate }}</td>
+                            <td>{{ order.service_type }}</td>
+                            <td>
+                                {% if order.mechanic %}
+                                    {{ order.mechanic.get_full_name|default:order.mechanic.username }}
+                                {% else %}
+                                    <span class="text-muted">Не призначено</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-badge status-{{ order.status }}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ order.price }} грн</td>
+                            <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'order_detail' order.pk %}" class="btn btn-sm btn-info" title="Деталі">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'admin_order_edit' order.pk %}" class="btn btn-sm btn-primary" title="Редагувати">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if not order.mechanic %}
+                                    <a href="{% url 'admin_assign_mechanic' order.pk %}" class="btn btn-sm btn-warning" title="Призначити механіка">
+                                        <i class="bi bi-person-plus"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Замовлень не знайдено
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

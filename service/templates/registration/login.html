@@ -1,0 +1,40 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Вхід - Автосервіс{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">
+                    <i class="bi bi-box-arrow-in-right"></i> Вхід
+                </h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Ім'я користувача</label>
+                        <input type="text" class="form-control" id="id_username" name="username" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="id_password" name="password" required>
+                    </div>
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Невірне ім'я користувача або пароль
+                        </div>
+                    {% endif %}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Увійти</button>
+                    </div>
+                </form>
+                <hr>
+                <p class="text-center mb-0">
+                    Ще не маєте акаунту? <a href="{% url 'register' %}">Зареєструватися</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

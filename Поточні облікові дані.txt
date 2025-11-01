@@ -1,0 +1,23 @@
+  Поточні облікові дані:
+
+  Адміністратори:
+  - admin / 123
+
+  Механіки:
+  - mechanic1 / 123 (Іван Петренко)
+  - mechanic2 / 123 (Олег Сидоренко)
+  - vasyl_mechanic / password123 (Василь Механік)
+  - dmytro_master / password123 (Дмитро Майстер)
+  - andriy_technician / password123 (Андрій Технік)
+
+  Клієнти:
+  - client1 / 123 (Марія Коваленко)
+  - client2 / 123 (Андрій Шевченко)
+  - client3 / 123 (Олена Бондаренко)
+  - sergiy / 123 (Serhii scherbakov)
+  - ivan_petrenko / password123
+  - maria_kovalenko / password123
+  - oleh_shevchenko / password123
+  - anna_bondar / password123
+  - petro_melnyk / password123
+  - admin_user / admin123 (Сергій Адміністратор)

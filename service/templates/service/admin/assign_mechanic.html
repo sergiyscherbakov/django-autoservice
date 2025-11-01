@@ -1,0 +1,59 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Призначити механіка - Автосервіс{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-person-plus"></i> Призначити механіка на замовлення #{{ order.id }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Інформація про замовлення:</h5>
+                    <p><strong>Клієнт:</strong> {{ order.client.get_full_name|default:order.client.username }}</p>
+                    <p><strong>Автомобіль:</strong> {{ order.car }}</p>
+                    <p><strong>Послуга:</strong> {{ order.service_type }}</p>
+                    <p><strong>Опис:</strong> {{ order.description }}</p>
+                </div>
+
+                <hr>
+
+                <h5>Виберіть механіка:</h5>
+                {% if mechanics %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="list-group mb-3">
+                            {% for mechanic_profile in mechanics %}
+                            <label class="list-group-item">
+                                <input class="form-check-input me-2" type="radio" name="mechanic_id" value="{{ mechanic_profile.id }}" required>
+                                <strong>{{ mechanic_profile.user.get_full_name|default:mechanic_profile.user.username }}</strong>
+                                {% if mechanic_profile.phone %}
+                                    <br><small class="text-muted">Телефон: {{ mechanic_profile.phone }}</small>
+                                {% endif %}
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Призначити
+                            </button>
+                            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад
+                            </a>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> Немає доступних механіків
+                    </div>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Назад
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

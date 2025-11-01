@@ -1,0 +1,83 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Додати автомобіль - Автосервіс{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="bi bi-car-front"></i> Додати автомобіль</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.brand.id_for_label }}" class="form-label">Марка</label>
+                            {{ form.brand }}
+                            {% if form.brand.errors %}
+                                <div class="text-danger">{{ form.brand.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.model.id_for_label }}" class="form-label">Модель</label>
+                            {{ form.model }}
+                            {% if form.model.errors %}
+                                <div class="text-danger">{{ form.model.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.year.id_for_label }}" class="form-label">Рік випуску</label>
+                            {{ form.year }}
+                            {% if form.year.errors %}
+                                <div class="text-danger">{{ form.year.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.color.id_for_label }}" class="form-label">Колір</label>
+                            {{ form.color }}
+                            {% if form.color.errors %}
+                                <div class="text-danger">{{ form.color.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.vin_code.id_for_label }}" class="form-label">VIN-код</label>
+                        {{ form.vin_code }}
+                        {% if form.vin_code.errors %}
+                            <div class="text-danger">{{ form.vin_code.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.license_plate.id_for_label }}" class="form-label">Номерний знак</label>
+                            {{ form.license_plate }}
+                            {% if form.license_plate.errors %}
+                                <div class="text-danger">{{ form.license_plate.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.mileage.id_for_label }}" class="form-label">Пробіг (км)</label>
+                            {{ form.mileage }}
+                            {% if form.mileage.errors %}
+                                <div class="text-danger">{{ form.mileage.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Зберегти
+                        </button>
+                        <a href="{% url 'client_dashboard' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Скасувати
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

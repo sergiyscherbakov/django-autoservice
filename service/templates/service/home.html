@@ -1,0 +1,78 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Головна - Автосервіс{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 mb-4">
+            <i class="bi bi-tools"></i> Ласкаво просимо до Автосервісу
+        </h1>
+        <p class="lead mb-4">
+            Професійний ремонт та обслуговування автомобілів. Швидко, якісно, надійно!
+        </p>
+
+        {% if user.is_authenticated %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Вітаємо, {{ user.first_name|default:user.username }}!</h5>
+                    <p class="card-text">Роль: {{ user.profile.get_role_display }}</p>
+
+                    {% if user.profile.role == 'client' %}
+                        <a href="{% url 'client_dashboard' %}" class="btn btn-primary">
+                            <i class="bi bi-speedometer2"></i> Перейти до панелі клієнта
+                        </a>
+                    {% elif user.profile.role == 'mechanic' %}
+                        <a href="{% url 'mechanic_dashboard' %}" class="btn btn-primary">
+                            <i class="bi bi-wrench"></i> Перейти до панелі механіка
+                        </a>
+                    {% elif user.profile.role == 'admin' %}
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-primary">
+                            <i class="bi bi-shield-check"></i> Перейти до панелі адміністратора
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="bi bi-person-plus"></i> Зареєструватися
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="bi bi-box-arrow-in-right"></i> Увійти
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-gear-fill display-1 text-primary"></i>
+                <h5 class="card-title mt-3">Діагностика</h5>
+                <p class="card-text">Комп'ютерна діагностика всіх систем автомобіля</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-wrench-adjustable display-1 text-success"></i>
+                <h5 class="card-title mt-3">Ремонт</h5>
+                <p class="card-text">Професійний ремонт будь-якої складності</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clock-history display-1 text-info"></i>
+                <h5 class="card-title mt-3">Швидкість</h5>
+                <p class="card-text">Виконання робіт в найкоротші терміни</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
